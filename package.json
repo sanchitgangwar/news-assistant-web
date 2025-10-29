@@ -1,0 +1,17 @@
+{
+  "name": "news-assistant-web",
+  "version": "1.0.0",
+  "description": "Upload a PDF, run a Python translator, stream logs via SSE, and download the result.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "uuid": "^13.0.0"
+  }
+}
