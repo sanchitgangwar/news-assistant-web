@@ -133,8 +133,8 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
         job.status = code === 0 ? 'finished' : 'failed';
         const ok = code === 0 && fs.existsSync(outputPath);
         const downloadUrls = ok ? {
-            pdf: `/outputs/${path.basename(outputPath)}`,
-            csv: `/outputs/${path.basename(outputPath.replace('.pdf', '.csv'))}`
+            pdf: `/download/${path.basename(outputPath)}`,
+            csv: `/download/${path.basename(outputPath.replace('.pdf', '.csv'))}`
           } : null;
         sendToAll('done', { ok, code, downloadUrls });
       }
