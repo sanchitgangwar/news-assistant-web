@@ -24,6 +24,7 @@
     .badge{background:#0e7490; color:white; font-size:12px; padding:2px 8px; border-radius:999px}
     .footer{margin-top:10px; display:flex; gap:10px; align-items:center; justify-content:space-between}
     a.download{color:#a7f3d0; text-decoration:none; font-weight:700}
+    .snchg{display: flex; align-items: center; justify-content: center; color: #333}
   </style>
 </head>
 <body>
@@ -56,6 +57,8 @@
         <div><a id="csv-download" class="download" href="#" style="display:none">Download CSV</a></div>
       </div>
     </div>
+
+    <div><p class="snchg">snchg</p></div>
   </div>
 
   <script>
@@ -125,7 +128,7 @@
       enterIdleMode();
     }
 
-    // ---------- Drag & drop ----------
+    // ---------- Drag & drop and click ----------
     uploadArea.addEventListener('dragover', (e) => {
       e.preventDefault();
       uploadArea.style.background = '#1e293b';
@@ -144,6 +147,9 @@
       } else {
         alert('Please drop a valid PDF file');
       }
+    });
+    uploadArea.addEventListener('click', (e) => {
+      pdfInput.click();
     });
 
     // Enable the start button when a file is chosen via picker

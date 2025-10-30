@@ -15,11 +15,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Configurable paths ---
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const OUTPUTS_DIR = path.join(__dirname, 'outputs');
-const PUBLIC_DIR  = path.join(__dirname, 'public');
-
 // Ensure directories exist
 for (const d of [UPLOADS_DIR, OUTPUTS_DIR]) {
   if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
