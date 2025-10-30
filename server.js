@@ -15,6 +15,11 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const UPLOADS_DIR = process.env.UPLOADS_DIR;
+const OUTPUTS_DIR = process.env.OUTPUTS_DIR;
+const PUBLIC_DIR = process.env.PUBLIC_DIR;
+
+
 // Ensure directories exist
 for (const d of [UPLOADS_DIR, OUTPUTS_DIR]) {
   if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
@@ -46,7 +51,7 @@ const jobs = new Map();
 
 // Serve static front-end and outputs
 app.use(express.static(PUBLIC_DIR));
-app.use('/outputs', express.static(OUTPUTS_DIR, {
+app.use('/download', express.static(OUTPUTS_DIR, {
   setHeaders: (res, filePath) => {
     res.setHeader('Content-Disposition', `attachment; filename="${path.basename(filePath)}"`);
   }
