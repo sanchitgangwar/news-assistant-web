@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,30 +14,164 @@
   <link rel="icon" type="image/png" href="./android-chrome-512x512.png" sizes="512x512"> <!-- For PWAs -->
 
   <style>
-    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#60a5fa; }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:var(--bg); color:var(--text);} 
-    .container{max-width:900px; margin:auto; padding:24px;}
-    .card{background:var(--card); border:1px solid #1f2937; border-radius:16px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.35);} 
-    h1{font-size:1.6rem; margin:0 0 8px}
-    p.sub{color:var(--muted); margin-top:0}
-    .upload-area{margin:20px 0; border:2px dashed #374151; border-radius:16px; padding:60px 20px; text-align:center; cursor:pointer; transition:background .2s, border-color .2s;}
-    .upload-area:hover{background:#1e293b; border-color:var(--accent);}
-    .upload-area input[type=file]{display:none;}
-    .upload-area label{display:block; color:var(--accent); font-weight:600; font-size:1.2rem; cursor:pointer;}
-    button{background:var(--accent); color:#0a0f1a; border:0; padding:12px 20px; border-radius:12px; font-weight:700; cursor:pointer; margin-top:10px; font-size:1rem;}
-    button[disabled]{opacity:.6; cursor:not-allowed}
-    .log{margin-top:18px; padding:14px; background:#0b1220; border:1px solid #1f2937; border-radius:12px; height:300px; overflow:auto; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:13px; white-space:pre-wrap}
-    .row{display:flex; gap:10px; align-items:center; justify-content:space-between}
-    .muted{color:var(--muted)}
-    .badge{background:#0e7490; color:white; font-size:12px; padding:2px 8px; border-radius:999px}
-    .footer{margin-top:10px; display:flex; gap:10px; align-items:center; justify-content:space-between}
-    a.download{color:#a7f3d0; text-decoration:none; font-weight:700}
-    .snchg{display: flex; align-items: center; justify-content: center; color: #333}
-    .header{margin-top: 20px; margin-botton: 0px; display: flex; align-items: center; justify-content: center;}
-    .logo{height: auto; width: 180px; max-width: 40vw; object-fit: contain;}
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0 0 8px
+    }
+
+    p.sub {
+      color: var(--muted);
+      margin-top: 0
+    }
+
+    .upload-area {
+      margin: 20px 0;
+      border: 2px dashed #374151;
+      border-radius: 16px;
+      padding: 60px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+
+    .upload-area:hover {
+      background: #1e293b;
+      border-color: var(--accent);
+    }
+
+    .upload-area input[type=file] {
+      display: none;
+    }
+
+    .upload-area label {
+      display: block;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    button {
+      background: var(--accent);
+      color: #0a0f1a;
+      border: 0;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+
+    button[disabled] {
+      opacity: .6;
+      cursor: not-allowed
+    }
+
+    .log {
+      margin-top: 18px;
+      padding: 14px;
+      background: #0b1220;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      height: 300px;
+      overflow: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      white-space: pre-wrap
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .badge {
+      background: #0e7490;
+      color: white;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 999px
+    }
+
+    .footer {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    a.download {
+      color: #a7f3d0;
+      text-decoration: none;
+      font-weight: 700
+    }
+
+    .snchg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333
+    }
+
+    .header {
+      margin-top: 20px;
+      margin-bottom: 0px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .logo {
+      height: auto;
+      width: 180px;
+      max-width: 40vw;
+      object-fit: contain;
+    }
   </style>
 </head>
+
 <body>
   <div class="header">
     <img src="./logo.png" class="logo" alt="" />
@@ -44,12 +179,16 @@
   <div class="container">
     <div class="card">
       <h1>Telugu News Clippings → English</h1>
-      <p class="sub">Upload a Telugu newspaper clippings PDF, with one clipping per page. The translation will stream live below, followed by a download link.</p>
+      <p class="sub">Upload a Telugu newspaper clippings PDF, with one clipping per page, or an image of newspaper
+        clipping.
+        The translation will stream live below, followed by a download link for PDF uploads, or translation in case of
+        an
+        image.</p>
 
       <form id="form">
         <div class="upload-area" id="upload-area">
-          <label for="pdf">📄 Click or Drop your PDF here</label>
-          <input type="file" id="pdf" name="pdf" accept="application/pdf" required />
+          <label for="pdf">📄 Click or Drop your PDF or Image here</label>
+          <input type="file" id="pdf" name="pdf" accept="application/pdf, image/jpeg, image/png" required />
         </div>
         <div style="text-align:center;">
           <!-- start disabled until a file is chosen -->
@@ -71,7 +210,9 @@
       </div>
     </div>
 
-    <div><p class="snchg">snchg</p></div>
+    <div>
+      <p class="snchg">snchg</p>
+    </div>
   </div>
 
   <script>
@@ -85,45 +226,45 @@
     const pdfDownloadEl = document.getElementById('pdf-download');
     const csvDownloadEl = document.getElementById('csv-download');
 
-    const defaultLabelText = '📄 Click or Drop your PDF here';
+    const defaultLabelText = '📄 Click or Drop your PDF or Image here';
     const labelEl = uploadArea.querySelector('label');
 
     let sse = null;
 
     // ---------- UI helpers ----------
-    function setStatus(text, color){
+    function setStatus(text, color) {
       statusEl.textContent = text;
       statusEl.style.background = color || '#0e7490';
     }
-    function appendLog(line){
+    function appendLog(line) {
       const atBottom = logEl.scrollTop + logEl.clientHeight >= logEl.scrollHeight - 5;
       logEl.textContent += line + '\n';
       if (atBottom) logEl.scrollTop = logEl.scrollHeight;
     }
-    function hideDownloads(){
+    function hideDownloads() {
       pdfDownloadEl.style.display = 'none';
       csvDownloadEl.style.display = 'none';
       pdfDownloadEl.removeAttribute('href');
       csvDownloadEl.removeAttribute('href');
     }
-    function enterIdleMode(){
+    function enterIdleMode() {
       // Button is for starting a translation; disabled until a file is chosen
       startBtn.textContent = 'Start Translation';
       startBtn.disabled = !pdfInput.files.length;
       startBtn.dataset.mode = 'start';
     }
-    function enterTranslatingMode(){
+    function enterTranslatingMode() {
       startBtn.textContent = 'Translating…';
       startBtn.disabled = true;
       startBtn.dataset.mode = 'busy';
     }
-    function enterCompletedMode(){
+    function enterCompletedMode() {
       // After job completes, allow user to reset
       startBtn.textContent = 'Start New Translation';
       startBtn.disabled = false;
       startBtn.dataset.mode = 'reset';
     }
-    function resetUI(){
+    function resetUI() {
       // Clear file input
       pdfInput.value = '';
       labelEl.textContent = defaultLabelText;
@@ -135,7 +276,7 @@
       hideDownloads();
 
       // Close any open stream
-      if (sse) { try { sse.close(); } catch {} sse = null; }
+      if (sse) { try { sse.close(); } catch { } sse = null; }
 
       // Back to idle state
       enterIdleMode();
@@ -153,12 +294,12 @@
       e.preventDefault();
       uploadArea.style.background = 'none';
       const file = e.dataTransfer.files[0];
-      if (file && file.type === 'application/pdf') {
+      if (file && (file.type === 'application/pdf' || file.type.startsWith('image/'))) {
         pdfInput.files = e.dataTransfer.files;
         labelEl.textContent = `✅ ${file.name}`;
         startBtn.disabled = false; // now we have a file
       } else {
-        alert('Please drop a valid PDF file');
+        alert('Please drop a valid PDF or Image file');
       }
     });
     uploadArea.addEventListener('click', (e) => {
@@ -200,6 +341,10 @@
       resultEl.textContent = '(processing...)';
       hideDownloads();
 
+      // Clear previous image results if any
+      const existingImageResult = document.getElementById('image-result');
+      if (existingImageResult) existingImageResult.remove();
+
       try {
         const body = new FormData();
         body.append('pdf', file);
@@ -221,20 +366,41 @@
         });
         sse.addEventListener('done', (ev) => {
           try {
-            const { ok, code, downloadUrls } = JSON.parse(ev.data);
+            const { ok, code, downloadUrls, result } = JSON.parse(ev.data);
 
-            if (ok && downloadUrls) {
+            if (ok) {
               setStatus('finished', '#10b981');
               resultEl.textContent = 'Ready';
-              if (downloadUrls.pdf) {
-                pdfDownloadEl.href = downloadUrls.pdf;
-                pdfDownloadEl.style.display = 'inline-block';
+
+              if (result) {
+                // Image result mode
+                const container = document.createElement('div');
+                container.id = 'image-result';
+                container.style.marginTop = '20px';
+                container.style.padding = '20px';
+                container.style.background = '#1f2937';
+                container.style.borderRadius = '16px';
+                container.innerHTML = `
+                    <h2 style="margin-top:0; color:var(--accent)">${result.title}</h2>
+                    <h3 style="color:var(--muted)">Summary</h3>
+                    <p>${result.summary}</p>
+                    <h3 style="color:var(--muted)">Translation</h3>
+                    <p style="white-space: pre-wrap;">${result.translation}</p>
+                  `;
+                document.querySelector('.card').appendChild(container);
+                appendLog(`[server] done. Results displayed.`);
+              } else if (downloadUrls) {
+                // PDF result mode
+                if (downloadUrls.pdf) {
+                  pdfDownloadEl.href = downloadUrls.pdf;
+                  pdfDownloadEl.style.display = 'inline-block';
+                }
+                if (downloadUrls.csv) {
+                  csvDownloadEl.href = downloadUrls.csv;
+                  csvDownloadEl.style.display = 'inline-block';
+                }
+                appendLog(`[server] done (code=${code}). Downloads prepared.`);
               }
-              if (downloadUrls.csv) {
-                csvDownloadEl.href = downloadUrls.csv;
-                csvDownloadEl.style.display = 'inline-block';
-              }
-              appendLog(`[server] done (code=${code}). Downloads prepared.`);
             } else {
               setStatus('failed', '#ef4444');
               resultEl.textContent = 'Failed';
@@ -264,4 +430,5 @@
     enterIdleMode();
   </script>
 </body>
+
 </html>

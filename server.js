@@ -37,10 +37,15 @@ const upload = multer({
   storage,
   limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
   fileFilter: (req, file, cb) => {
-    if ((file.mimetype || '').includes('pdf') || file.originalname.toLowerCase().endsWith('.pdf')) {
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+    const allowedExts = ['.pdf', '.jpg', '.jpeg', '.png'];
+    const isAllowedType = allowedTypes.includes(file.mimetype);
+    const isAllowedExt = allowedExts.some(ext => file.originalname.toLowerCase().endsWith(ext));
+
+    if (isAllowedType || isAllowedExt) {
       cb(null, true);
     } else {
-      cb(new Error('Only PDF files are allowed'));
+      cb(new Error('Only PDF, JPG, and PNG files are allowed'));
     }
   }
 });
@@ -80,6 +85,7 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
 
     const jobId = uuidv4();
     const inputPath = req.file.path; // uploaded temp file
+    const isImage = ['.jpg', '.jpeg', '.png'].includes(path.extname(req.file.originalname).toLowerCase());
 
     // Derive an output path; your Python script should write to this path.
     const outputFilename = `${path.parse(req.file.filename).name}-translated.pdf`;
@@ -90,12 +96,13 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
     const PYTHON_SCRIPT = process.env.PYTHON_SCRIPT || path.join(__dirname, 'index.py');
 
     // Spawn Python process — adjust args to match your script
-    const args = [
-      PYTHON_SCRIPT,
-      '--input', inputPath,
-      '--output', outputPath
-      // add more flags if your script needs API keys, etc. Prefer ENV vars.
-    ];
+    const args = [PYTHON_SCRIPT, '--input', inputPath];
+
+    if (isImage) {
+      args.push('--image-mode');
+    } else {
+      args.push('--output', outputPath);
+    }
 
     const child = spawn(PYTHON_BIN, args, { stdio: ['ignore', 'pipe', 'pipe'] });
 
@@ -104,18 +111,25 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
       clients: new Set(),
       outputPath,
       pythonPid: child.pid,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      isImage
     };
     jobs.set(jobId, job);
 
     const sendToAll = (event, payload) => {
       for (const client of job.clients) {
-        try { sseSend(client, event, payload); } catch (_) {}
+        try { sseSend(client, event, payload); } catch (_) { }
       }
     };
 
+    let scriptOutput = '';
+
     child.stdout.on('data', (chunk) => {
-      sendToAll('log', { type: 'stdout', message: chunk.toString() });
+      const text = chunk.toString();
+      if (job.isImage) {
+        scriptOutput += text;
+      }
+      sendToAll('log', { type: 'stdout', message: text });
     });
 
     child.stderr.on('data', (chunk) => {
@@ -131,15 +145,36 @@ app.post('/upload', upload.single('pdf'), async (req, res) => {
     child.on('close', (code) => {
       if (job.status !== 'error') {
         job.status = code === 0 ? 'finished' : 'failed';
-        const ok = code === 0 && fs.existsSync(outputPath);
-        const downloadUrls = ok ? {
+
+        if (job.isImage) {
+          let resultData = null;
+          try {
+            // Attempt to parse the last line or the whole output as JSON if possible
+            // But since we are streaming logs, we might need to be careful.
+            // For now, let's assume the script prints the JSON result at the end or we can just pass the raw output.
+            // Better: The python script should print a specific marker or just the JSON.
+            // Let's assume the script prints the JSON as the last thing.
+            // We will parse the accumulated stdout to find the JSON.
+            // Simple approach: Look for a JSON object in the output.
+            const jsonMatch = scriptOutput.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              resultData = JSON.parse(jsonMatch[0]);
+            }
+          } catch (e) {
+            console.error("Failed to parse image result", e);
+          }
+          sendToAll('done', { ok: code === 0, code, result: resultData });
+        } else {
+          const ok = code === 0 && fs.existsSync(outputPath);
+          const downloadUrls = ok ? {
             pdf: `/download/${path.basename(outputPath)}`,
             csv: `/download/${path.basename(outputPath.replace('.pdf', '.csv'))}`
           } : null;
-        sendToAll('done', { ok, code, downloadUrls });
+          sendToAll('done', { ok, code, downloadUrls });
+        }
       }
       // Clean up uploaded temp file
-      fs.unlink(inputPath, () => {});
+      fs.unlink(inputPath, () => { });
     });
 
     // Reply to the upload with the jobId the client can stream
@@ -169,7 +204,7 @@ app.get('/stream/:jobId', (req, res) => {
 
   // Heartbeat to keep the connection open on proxies
   const interval = setInterval(() => {
-    try { res.write(': ping\n\n'); } catch (_) {}
+    try { res.write(': ping\n\n'); } catch (_) { }
   }, 2000);
 
   req.on('close', () => {
